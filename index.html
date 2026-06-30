@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="An AI-powered platform that helps NPS users visualize, simulate, and optimize their retirement outcomes with real-time predictive analytics and personalized financial guidance.">
+  <title>NPS Predictor & Optimizer</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Load Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <i data-lucide="line-chart" class="w-8 h-8"></i>
+        <div>
+          <h1>NPS Predictor & Optimizer</h1>
+        </div>
+        <span class="logo-badge">AI Powered</span>
+      </div>
+      <div class="header-actions">
+        <button id="quick-save-btn" class="btn-icon" title="Save Plan">
+          <i data-lucide="bookmark"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-grid">
+      <!-- Sidebar Inputs (Left Panel) -->
+      <aside class="glass-panel">
+        <h2 class="section-title">
+          <i data-lucide="sliders"></i>
+          Simulation Inputs
+        </h2>
+        
+        <!-- Input fields -->
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-age">Current Age</label>
+            <span id="display-age" class="input-value-display">30 Yrs</span>
+          </div>
+          <input type="range" id="input-age" class="input-slider" min="18" max="60" value="30">
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-retire-age">Retirement Age</label>
+            <span id="display-retire-age" class="input-value-display">60 Yrs</span>
+          </div>
+          <input type="range" id="input-retire-age" class="input-slider" min="60" max="70" value="60">
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-salary">Monthly Salary</label>
+          </div>
+          <div class="input-text-wrapper">
+            <span class="input-text-prefix">₹</span>
+            <input type="number" id="input-salary" class="input-text" value="50000" min="0">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-balance">Current NPS Balance</label>
+          </div>
+          <div class="input-text-wrapper">
+            <span class="input-text-prefix">₹</span>
+            <input type="number" id="input-balance" class="input-text" value="0" min="0">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-monthly-contrib">Your Monthly Contribution</label>
+          </div>
+          <div class="input-text-wrapper">
+            <span class="input-text-prefix">₹</span>
+            <input type="number" id="input-monthly-contrib" class="input-text" value="5000" min="0">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-employer-contrib">Employer Contribution (Monthly)</label>
+          </div>
+          <div class="input-text-wrapper">
+            <span class="input-text-prefix">₹</span>
+            <input type="number" id="input-employer-contrib" class="input-text" value="5000" min="0">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-label-container">
+            <label class="input-label" for="input-target-pension">Target Monthly Pension</label>
+          </div>
+          <div class="input-text-wrapper">
+            <span class="input-text-prefix">₹</span>
+            <input type="number" id="input-target-pension" class="input-text" value="50000" min="0">
+          </div>
+        </div>
+
+        <!-- Risk Profile Selection -->
+        <div class="input-group">
+          <label class="input-label" style="display: block; margin-bottom: 0.5rem;">Asset Allocation Mode</label>
+          <div class="risk-profile-container">
+            <button class="risk-btn" id="risk-conservative" data-profile="conservative">Conservative</button>
+            <button class="risk-btn active" id="risk-moderate" data-profile="moderate">Moderate</button>
+            <button class="risk-btn" id="risk-aggressive" data-profile="aggressive">Aggressive</button>
+          </div>
+        </div>
+
+        <!-- Allocation Sliders -->
+        <div class="allocation-box">
+          <div class="allocation-header">
+            <span>Asset Allocations</span>
+            <span id="allocation-total" class="allocation-total success">Total: 100%</span>
+          </div>
+
+          <div class="input-group" style="margin-bottom: 0.75rem;">
+            <div class="input-label-container">
+              <span class="input-label">Equity (E)</span>
+              <span id="display-alloc-equity" class="input-value-display" style="font-size: 0.85rem; color: hsl(var(--primary-hover));">50%</span>
+            </div>
+            <input type="range" id="alloc-equity" class="input-slider" min="0" max="75" value="50" style="height: 4px;">
+          </div>
+
+          <div class="input-group" style="margin-bottom: 0.75rem;">
+            <div class="input-label-container">
+              <span class="input-label">Corporate Bonds (C)</span>
+              <span id="display-alloc-corp" class="input-value-display" style="font-size: 0.85rem; color: hsl(var(--secondary));">30%</span>
+            </div>
+            <input type="range" id="alloc-corp" class="input-slider" min="0" max="100" value="30" style="height: 4px;">
+          </div>
+
+          <div class="input-group" style="margin-bottom: 0;">
+            <div class="input-label-container">
+              <span class="input-label">Government Bonds (G)</span>
+              <span id="display-alloc-gov" class="input-value-display" style="font-size: 0.85rem; color: hsl(var(--amber));">20%</span>
+            </div>
+            <input type="range" id="alloc-gov" class="input-slider" min="0" max="100" value="20" style="height: 4px;">
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Dashboard display (Right Panel) -->
+      <main class="dashboard-main">
+        <!-- Navigation Tabs -->
+        <div class="tabs-container">
+          <button class="tab-btn active" data-tab="summary">
+            <i data-lucide="bar-chart-2"></i>
+            Projections & Breakdown
+          </button>
+          <button class="tab-btn" data-tab="montecarlo">
+            <i data-lucide="dices"></i>
+            Monte Carlo Simulation
+          </button>
+          <button class="tab-btn" data-tab="goal">
+            <i data-lucide="target"></i>
+            Goal Planner
+          </button>
+          <button class="tab-btn" data-tab="coach">
+            <i data-lucide="bot"></i>
+            AI Advisor Coach
+          </button>
+          <button class="tab-btn" data-tab="saved">
+            <i data-lucide="folder-heart"></i>
+            Saved Plans (<span id="saved-plans-count">0</span>)
+          </button>
+        </div>
+
+        <!-- TAB 1: Summary Dashboard -->
+        <div id="tab-summary" class="content-panel active">
+          <!-- Metrics Cards -->
+          <div class="metrics-row">
+            <div class="metric-card">
+              <span class="metric-card-label">Projected Corpus</span>
+              <span id="metric-corpus" class="metric-card-value">₹0</span>
+              <span class="metric-card-subtext">Accumulated at retirement</span>
+            </div>
+            <div class="metric-card cyan">
+              <span class="metric-card-label">Estimated Pension</span>
+              <span id="metric-pension" class="metric-card-value">₹0 /mo</span>
+              <span class="metric-card-subtext">At 6% return on 40% annuity</span>
+            </div>
+            <div class="metric-card emerald">
+              <span class="metric-card-label">Tax-Free Lump Sum</span>
+              <span id="metric-lumpsum" class="metric-card-value">₹0</span>
+              <span class="metric-card-subtext">60% of total corpus</span>
+            </div>
+            <div class="metric-card amber">
+              <span class="metric-card-label">Annuity Purchased</span>
+              <span id="metric-annuity" class="metric-card-value">₹0</span>
+              <span class="metric-card-subtext">40% mandatory reinvested</span>
+            </div>
+          </div>
+
+          <!-- Chart Area -->
+          <div class="glass-panel" style="margin-top: 1.5rem;">
+            <div class="input-label-container" style="margin-bottom: 0.5rem;">
+              <h3 class="section-title" style="margin-bottom: 0;">
+                <i data-lucide="trending-up"></i>
+                Accumulation Projections Timeline
+              </h3>
+              <span id="chart-legend" class="chart-legend">
+                <span class="legend-item"><span class="legend-color" style="background: hsl(var(--primary));"></span>Projected Corpus</span>
+                <span class="legend-item"><span class="legend-color" style="background: hsl(var(--text-muted)); border: 1px dashed rgba(255,255,255,0.2);"></span>Total Contributions</span>
+              </span>
+            </div>
+            
+            <div class="chart-container">
+              <!-- SVG chart gets drawn here by app.js -->
+              <svg id="projection-chart" class="chart-svg"></svg>
+              <!-- Chart tooltip overlay -->
+              <div id="chart-tooltip" class="chart-tooltip"></div>
+            </div>
+            <p style="font-size: 0.75rem; color: hsl(var(--text-muted)); text-align: center; margin-top: 0.5rem;">
+              Hover or tap on the timeline chart to inspect year-by-year projections, pension outcomes, and contribution growth.
+            </p>
+          </div>
+
+          <!-- Bottom Row: Allocations breakdown -->
+          <div class="glass-panel" style="margin-top: 1.5rem;">
+            <h3 class="section-title">
+              <i data-lucide="pie-chart"></i>
+              Asset Allocation & Portfolio Profile
+            </h3>
+            <div class="donut-grid">
+              <div class="donut-svg-container">
+                <svg id="allocation-donut" width="140" height="140" viewBox="0 0 140 140"></svg>
+              </div>
+              <div class="donut-label-list">
+                <div class="donut-label-item">
+                  <div class="donut-label-info">
+                    <span class="legend-color" style="background: hsl(var(--primary-hover));"></span>
+                    <span>Equity (Asset Class E)</span>
+                  </div>
+                  <span id="donut-equity-val" class="donut-label-value">50%</span>
+                </div>
+                <div class="donut-label-item">
+                  <div class="donut-label-info">
+                    <span class="legend-color" style="background: hsl(var(--secondary));"></span>
+                    <span>Corporate Debt (Asset Class C)</span>
+                  </div>
+                  <span id="donut-corp-val" class="donut-label-value">30%</span>
+                </div>
+                <div class="donut-label-item">
+                  <div class="donut-label-info">
+                    <span class="legend-color" style="background: hsl(var(--amber));"></span>
+                    <span>Government Securities (Asset Class G)</span>
+                  </div>
+                  <span id="donut-gov-val" class="donut-label-value">20%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Monte Carlo Simulation -->
+        <div id="tab-montecarlo" class="content-panel">
+          <div class="glass-panel">
+            <h3 class="section-title">
+              <i data-lucide="dices"></i>
+              Monte Carlo Risk & Probability Analysis
+            </h3>
+            <p style="font-size: 0.9rem; color: hsl(var(--text-secondary)); margin-bottom: 1.5rem;">
+              Retirement returns are never flat. We simulated 1,000 statistical market pathways based on return volatility (±3% deviation) to assess your retirement corpus confidence intervals.
+            </p>
+
+            <div class="metrics-row" style="margin-bottom: 1.5rem;">
+              <div class="metric-card emerald">
+                <span class="metric-card-label">Optimistic (95th Percentile)</span>
+                <span id="monte-optimistic" class="metric-card-value">₹0</span>
+                <span class="metric-card-subtext">Best-case market outcomes</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-card-label">Realistic (50th Percentile)</span>
+                <span id="monte-realistic" class="metric-card-value">₹0</span>
+                <span class="metric-card-subtext">Median simulated path</span>
+              </div>
+              <div class="metric-card rose">
+                <span class="metric-card-label">Pessimistic (5th Percentile)</span>
+                <span id="monte-pessimistic" class="metric-card-value">₹0</span>
+                <span class="metric-card-subtext">Worst-case market downturn</span>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <svg id="monte-carlo-chart" class="chart-svg"></svg>
+            </div>
+            
+            <div class="chart-legend" style="margin-top: 1rem;">
+              <span class="legend-item"><span class="legend-color" style="background: hsl(var(--emerald));"></span>Optimistic Path (High Yield)</span>
+              <span class="legend-item"><span class="legend-color" style="background: hsl(var(--primary));"></span>Realistic Path (Median)</span>
+              <span class="legend-item"><span class="legend-color" style="background: hsl(var(--rose));"></span>Pessimistic Path (Low Yield)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: Goal Planner -->
+        <div id="tab-goal" class="content-panel">
+          <div class="glass-panel">
+            <h3 class="section-title">
+              <i data-lucide="target"></i>
+              Retirement Target Gap Analysis
+            </h3>
+            
+            <div class="goal-card">
+              <div>
+                <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">Target Check</h4>
+                <p id="goal-status-text" style="font-size: 0.9rem; color: hsl(var(--text-secondary));">
+                  Comparing your projected pension with your targeted monthly pension.
+                </p>
+              </div>
+              <div id="goal-badge" class="goal-status-badge shortfall">Shortfall</div>
+            </div>
+
+            <div class="metrics-row" style="margin-top: 1.5rem;">
+              <div class="metric-card">
+                <span class="metric-card-label">Projected Pension</span>
+                <span id="goal-current-pension" class="metric-card-value">₹0 /mo</span>
+                <span class="metric-card-subtext">What you are currently on track for</span>
+              </div>
+              <div class="metric-card cyan">
+                <span class="metric-card-label">Target Pension</span>
+                <span id="goal-target-pension" class="metric-card-value">₹50,000 /mo</span>
+                <span class="metric-card-subtext">Desired monthly retirement payout</span>
+              </div>
+              <div class="metric-card rose" id="goal-shortfall-card">
+                <span class="metric-card-label">Monthly Pension Shortfall</span>
+                <span id="goal-shortfall" class="metric-card-value">₹0 /mo</span>
+                <span class="metric-card-subtext">Deficit to close the retirement gap</span>
+              </div>
+            </div>
+
+            <div id="goal-action-box" class="goal-highlight-box">
+              <div>
+                <h4 class="goal-highlight-title">Required Additional Contribution</h4>
+                <p style="font-size: 0.75rem; color: hsl(var(--text-muted)); margin-top: 0.15rem;">
+                  Increase your personal monthly deposit by this much to bridge the gap.
+                </p>
+              </div>
+              <span id="goal-required-contrib" class="goal-highlight-value">₹0 /mo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: AI Advisor Coach -->
+        <div id="tab-coach" class="content-panel">
+          <div class="glass-panel coach-container">
+            <div class="coach-header">
+              <div class="coach-avatar">
+                <i data-lucide="sparkles" class="w-5 h-5 text-white animate-pulse"></i>
+              </div>
+              <div>
+                <h3 class="coach-name-title">NPS Wealth Advisor Coach</h3>
+                <span class="coach-subtitle">AI-Powered Financial Insights</span>
+              </div>
+            </div>
+            
+            <div id="coach-bubble-msg" class="coach-bubble">
+              Analyzing your NPS allocation, contribution rate, and investment timeline. Let's see how we can optimize your retirement portfolio...
+            </div>
+
+            <h4 style="font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-top: 1rem; color: white;">
+              Recommended Strategic Moves
+            </h4>
+            
+            <div id="coach-tips-grid" class="coach-tips-grid">
+              <!-- Tip cards are generated dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: Saved Plans -->
+        <div id="tab-saved" class="content-panel">
+          <div class="glass-panel">
+            <h3 class="section-title">
+              <i data-lucide="folder-heart"></i>
+              Saved Planning Configurations
+            </h3>
+            <p style="font-size: 0.9rem; color: hsl(var(--text-secondary)); margin-bottom: 1.5rem;">
+              Save your current configurations locally to compare different scenarios (e.g. Aggressive Growth vs Conservative, High Contribution vs Basic).
+            </p>
+
+            <form id="save-plan-form" class="save-plan-form" onsubmit="event.preventDefault();">
+              <div class="input-text-wrapper" style="width: 100%;">
+                <span class="input-text-prefix"><i data-lucide="edit-3" style="width: 14px; height: 14px;"></i></span>
+                <input type="text" id="save-plan-name" class="input-text" placeholder="Enter scenario name (e.g. My Optimistic Target)" style="padding-left: 2.25rem;">
+              </div>
+              <button id="save-plan-submit" class="btn-primary" style="margin-top: 0; padding: 0 1.5rem;">
+                Save Plan
+              </button>
+            </form>
+
+            <div id="plans-list" class="plans-list">
+              <!-- Render saved plans here dynamically -->
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
