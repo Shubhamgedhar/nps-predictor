@@ -220,6 +220,18 @@ function formatRawCurrency(val) {
   return "₹" + Math.round(val).toLocaleString("en-IN");
 }
 
+function formatAxisLabel(val) {
+  if (val >= 10000000) {
+    return `₹${(val / 10000000).toFixed(1)} Cr`;
+  } else if (val >= 100000) {
+    return `₹${(val / 100000).toFixed(0)} L`;
+  } else if (val >= 1000) {
+    return `₹${(val / 1000).toFixed(0)} K`;
+  } else {
+    return `₹${Math.round(val)}`;
+  }
+}
+
 // Initial Sync
 function init() {
   // Load saved plans
@@ -586,11 +598,7 @@ function drawProjectionChart(timeline) {
     text.setAttribute("text-anchor", "end");
     text.setAttribute("class", "chart-axis-text");
     
-    if (val >= 10000000) {
-      text.textContent = `₹${(val / 10000000).toFixed(1)} Cr`;
-    } else {
-      text.textContent = `₹${(val / 100000).toFixed(0)} L`;
-    }
+    text.textContent = formatAxisLabel(val);
     svg.appendChild(text);
   }
 
@@ -903,11 +911,7 @@ function drawMonteCarloChart(inputs, mc) {
     text.setAttribute("text-anchor", "end");
     text.setAttribute("class", "chart-axis-text");
     
-    if (val >= 10000000) {
-      text.textContent = `₹${(val / 10000000).toFixed(1)} Cr`;
-    } else {
-      text.textContent = `₹${(val / 100000).toFixed(0)} L`;
-    }
+    text.textContent = formatAxisLabel(val);
     svg.appendChild(text);
   }
 
