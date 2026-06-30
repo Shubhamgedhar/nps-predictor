@@ -1,9 +1,6 @@
 # NPS Predictor & Retirement Optimizer
 
 A visually stunning, high-performance standalone web application that helps National Pension System (NPS) subscribers in India simulate, analyze, and optimize their retirement outcomes. Designed with premium dark-glass aesthetics, interactive graphics, and advanced statistical modeling, it empowers users with actionable wealth-building advice and goal gap analysis.
-
-Live preview link (original AI agent prototype): https://nps-predictor.base44.app/
-
 ---
 
 ## 🌟 Key Features
